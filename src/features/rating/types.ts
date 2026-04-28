@@ -1,6 +1,8 @@
 export type RatingType = "negative" | "positive" | "stellar";
-export type FlowStep =
-    | "rating"
-    | "feedback"
-    | "thankyou"
-    | "trustpilot";
+
+export type FlowState =
+    | { step: "rating" }
+    | { step: "feedback" }
+    | { step: "thankyou"; rating: RatingType }
+    | { step: "trustpilot" }
+    | { step: "closed" };

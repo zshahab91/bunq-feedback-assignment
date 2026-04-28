@@ -4,39 +4,35 @@ import { ThankYouPopup } from "./features/rating/components/ThankYouPopup/ThankY
 import { TrustpilotPopup } from "./features/rating/components/TrustpilotPopup/TrustpilotPopup";
 import { useRatingFlow } from "./features/rating/hooks/useRatingFlow";
 import { ThemeToggle } from "./app/components/ThemeToggle";
+import type { FlowState } from "./features/rating/types";
 
 function App() {
 
   const flow = useRatingFlow();
+  const currentState = flow.state;
+  const screens: Record<FlowState["step"], () => React.ReactNode> = {
+    rating: () => (
+      <RatingPopup
+        isOpen
+        onSelect={flow.handleRatingSelect}
+      />
+    ),
+    feedback: () => (
+      <FeedbackPopup
+        isOpen
+        onSubmit={flow.handleFeedbackSubmit}
+        onBack={flow.goToRating}
+      />
+    ),
+    thankyou: () => <ThankYouPopup isOpen />,
+    trustpilot: () => <TrustpilotPopup isOpen onBack={flow.goToRating} />,
+    closed: () => null,
+  };
 
   return (
     <>
       <ThemeToggle />
-      {(() => {
-        switch (flow.step) {
-          case "rating":
-            return (
-              <RatingPopup
-                isOpen
-                onSelect={flow.handleRatingSelect}
-              />
-            );
-          case "feedback":
-            return (
-              <FeedbackPopup
-                isOpen
-                onSubmit={flow.handleFeedbackSubmit}
-                onBack={flow.goToRating}
-              />
-            );
-          case "thankyou":
-            return <ThankYouPopup isOpen />;
-          case "trustpilot":
-            return <TrustpilotPopup isOpen onBack={flow.goToRating} />;
-          default:
-            return null;
-        }
-      })()}
+      {screens[currentState.step]()}
     </>
   );
 }

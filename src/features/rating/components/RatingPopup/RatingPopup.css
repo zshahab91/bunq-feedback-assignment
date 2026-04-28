@@ -1,16 +1,17 @@
 .rating-popup-title {
-    margin: 0 0 16px;
+    margin: 0 0 22px;
     color: var(--text-h);
-    font-size: 1.125rem;
-    line-height: 1.3;
+    font-family: var(--heading);
+    font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+    line-height: 1.1;
     font-weight: 600;
-    letter-spacing: 0.5px;
+    letter-spacing: -0.03em;
 }
 
 .rating-popup-actions {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px;
+    gap: 14px;
 }
 
 .rating-popup-button {
@@ -18,29 +19,56 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    padding: 16px 12px;
+    gap: 10px;
+    min-height: 11rem;
+    padding: 20px 14px;
     border: 1px solid var(--border);
-    border-radius: 10px;
-    background: var(--bg);
+    border-radius: 22px;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0)) border-box,
+        linear-gradient(180deg, var(--surface-strong), var(--surface)) padding-box;
     color: var(--text-h);
     cursor: pointer;
-    transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
+    transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background 180ms ease;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+    position: relative;
+    overflow: hidden;
+}
+
+.rating-popup-button::after {
+    content: "";
+    position: absolute;
+    inset: auto -22% -46% auto;
+    width: 8rem;
+    height: 8rem;
+    border-radius: 50%;
+    background: var(--accent-glow);
+    opacity: 0;
+    transition: opacity 180ms ease;
 }
 
 .rating-popup-emoji {
-    font-size: 2.5rem;
+    font-size: 2.75rem;
     line-height: 1;
     display: block;
-    min-height: 2.5rem;
+    min-height: 2.75rem;
     font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
     text-rendering: auto;
+    transition: transform 180ms ease;
 }
 
 .rating-popup-button:hover {
     border-color: var(--accent-border);
-    box-shadow: var(--shadow);
-    transform: translateY(-1px);
+    box-shadow: var(--panel-shadow);
+    transform: translateY(-4px);
+}
+
+.rating-popup-button:hover::after {
+    opacity: 1;
+}
+
+.rating-popup-button:hover .rating-popup-emoji {
+    transform: translateY(-2px) scale(1.06);
 }
 
 .rating-popup-button:focus-visible {
@@ -49,8 +77,34 @@
 }
 
 .rating-popup-label {
-    font-size: 0.9rem;
-    font-weight: 500;
+    font-size: 0.94rem;
+    font-weight: 600;
+    position: relative;
+    z-index: 1;
+}
+
+.rating-popup-button:nth-child(1) {
+    animation: card-rise-in 240ms ease 40ms both;
+}
+
+.rating-popup-button:nth-child(2) {
+    animation: card-rise-in 240ms ease 90ms both;
+}
+
+.rating-popup-button:nth-child(3) {
+    animation: card-rise-in 240ms ease 140ms both;
+}
+
+@keyframes card-rise-in {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @media (max-width: 520px) {
@@ -61,5 +115,6 @@
     .rating-popup-button {
         flex-direction: row;
         justify-content: flex-start;
+        min-height: unset;
     }
 }

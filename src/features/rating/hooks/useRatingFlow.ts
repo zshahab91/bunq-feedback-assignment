@@ -1,56 +1,40 @@
-import { useEffect, useRef, useState, useTransition } from "react";
-import type { FlowStep, RatingType } from "../types";
+import { useState, useTransition } from "react";
+import type { FlowState, RatingType } from "../types";
+import { useAutoClose } from "./useAutoClose";
 
 export function useRatingFlow() {
-    const [step, setStep] = useState<FlowStep>("rating");
+    const [state, setState] = useState<FlowState>({ step: "rating" });
     const [isPending, startTransition] = useTransition();
-    const timeoutRef = useRef<number | null>(null);
 
-    const clearPendingTimeout = () => {
-        if (timeoutRef.current !== null) {
-            window.clearTimeout(timeoutRef.current);
-            timeoutRef.current = null;
+    useAutoClose(state.step, 2000, () => {
+        if (state.step !== "thankyou") {
+            return;
         }
-    };
 
-    const scheduleStepChange = (nextStep: FlowStep, delayMs: number) => {
-        clearPendingTimeout();
-        timeoutRef.current = window.setTimeout(() => {
-            setStep(nextStep);
-            timeoutRef.current = null;
-        }, delayMs);
-    };
+        setState(state.rating === "stellar" ? { step: "trustpilot" } : { step: "rating" });
+    });
 
     const handleRatingSelect = (selectedRating: RatingType) => {
         startTransition(() => {
             if (selectedRating === "negative") {
-                setStep("feedback");
+                setState({ step: "feedback" });
             } else {
-                setStep("thankyou");
-                scheduleStepChange(selectedRating === "stellar" ? "trustpilot" : "rating", 2000);
+                setState({ step: "thankyou", rating: selectedRating });
             }
         });
     };
 
     const handleFeedbackSubmit = () => {
-        setStep("thankyou");
-        scheduleStepChange("rating", 2000);
+        setState({ step: "thankyou", rating: "negative" });
     };
 
     const goToRating = () => {
-        clearPendingTimeout();
-        setStep("rating");
+        setState({ step: "rating" });
     };
-
-    useEffect(() => {
-        return () => {
-            clearPendingTimeout();
-        };
-    }, []);
 
 
     return {
-        step,
+        state,
         isPending,
         handleRatingSelect,
         handleFeedbackSubmit,
