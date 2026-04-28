@@ -9,10 +9,6 @@ function App() {
 
   const flow = useRatingFlow();
 
-  if (flow.step === "closed") {
-    return <ThemeToggle />;
-  }
-
   return (
     <>
       <ThemeToggle />

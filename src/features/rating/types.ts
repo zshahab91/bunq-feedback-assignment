@@ -3,5 +3,4 @@ export type FlowStep =
     | "rating"
     | "feedback"
     | "thankyou"
-    | "trustpilot"
-    | "closed";
+    | "trustpilot";

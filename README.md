@@ -59,13 +59,15 @@ Current automated tests cover:
 1. POSITIVE path: thank-you appears, then rating popup returns.
 2. NEGATIVE path: feedback validation, submit, thank-you, then rating popup returns.
 3. STELLAR path: thank-you appears, then Trustpilot popup appears.
+4. Back navigation: returning from feedback and Trustpilot popups to the rating popup.
+5. Modal keyboard behavior: focus trapping and focus restoration on close.
 
 ## Assessment Notes
 
 1. Separation of concerns:
 	UI is split into focused popup components and a dedicated flow hook that owns transition logic.
 2. Accessibility:
-	Dialogs use semantic roles and labeling, inputs are associated with labels, and keyboard close behavior is supported.
+	Dialogs use semantic roles and labeling, inputs are associated with labels, and keyboard focus is trapped/restored while modals are open.
 3. Validation:
 	Feedback is validated with Zod before submission and provides inline user-facing errors.
 4. Robust transitions:

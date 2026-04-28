@@ -80,4 +80,36 @@ describe("Feature rating flow", () => {
     expect(screen.getByText("Enjoying bunq?")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Leave a Trustpilot review" })).toBeInTheDocument();
   });
+
+  it("navigates back from feedback to rating", async () => {
+    render(
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Not good" }));
+    expect(screen.getByText("How can we improve?")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Back to rating" }));
+    expect(screen.getByText("How would you rate this feature?")).toBeInTheDocument();
+  });
+
+  it("navigates back from trustpilot to rating", async () => {
+    render(
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Excellent" }));
+
+    act(() => {
+      vi.advanceTimersByTime(2000);
+    });
+
+    expect(screen.getByText("Enjoying bunq?")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Back to rating" }));
+    expect(screen.getByText("How would you rate this feature?")).toBeInTheDocument();
+  });
 });

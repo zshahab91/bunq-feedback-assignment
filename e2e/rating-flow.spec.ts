@@ -30,6 +30,22 @@ test.describe("Feature rating popup flow", () => {
     await expect(page.getByText("How would you rate this feature?")).toBeVisible();
   });
 
+  test("back button returns from feedback popup to rating", async ({ page }) => {
+    await page.getByRole("button", { name: "Not good" }).click();
+
+    await expect(page.getByText("How can we improve?")).toBeVisible();
+    await page.getByRole("button", { name: "Back to rating" }).click();
+    await expect(page.getByText("How would you rate this feature?")).toBeVisible();
+  });
+
+  test("back button returns from trustpilot popup to rating", async ({ page }) => {
+    await page.getByRole("button", { name: "Excellent" }).click();
+
+    await expect(page.getByText("Enjoying bunq?")).toBeVisible({ timeout: 3000 });
+    await page.getByRole("button", { name: "Back to rating" }).click();
+    await expect(page.getByText("How would you rate this feature?")).toBeVisible();
+  });
+
   test("stellar rating shows trustpilot prompt after thank you", async ({ page }) => {
     await page.getByRole("button", { name: "Excellent" }).click();
 

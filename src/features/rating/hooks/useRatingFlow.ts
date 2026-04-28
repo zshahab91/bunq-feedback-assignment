@@ -3,7 +3,6 @@ import type { FlowStep, RatingType } from "../types";
 
 export function useRatingFlow() {
     const [step, setStep] = useState<FlowStep>("rating");
-    const [rating, setRating] = useState<RatingType | null>(null);
     const [isPending, startTransition] = useTransition();
     const timeoutRef = useRef<number | null>(null);
 
@@ -24,7 +23,6 @@ export function useRatingFlow() {
 
     const handleRatingSelect = (selectedRating: RatingType) => {
         startTransition(() => {
-            setRating(selectedRating);
             if (selectedRating === "negative") {
                 setStep("feedback");
             } else {
@@ -53,7 +51,6 @@ export function useRatingFlow() {
 
     return {
         step,
-        rating,
         isPending,
         handleRatingSelect,
         handleFeedbackSubmit,
